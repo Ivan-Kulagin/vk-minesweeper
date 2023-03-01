@@ -27,7 +27,7 @@ const chunkArray = (array, chunkSize) => {
 
 const generateField = (width, height, mines, clickPos) => {
     const clickedSquare = clickPos.y * width + clickPos.x
-    const array = [...Array(width * height - mines).fill({mine: false}), ...Array(mines).fill({mine: true})]
+    const array = [...Array(width * height - mines).fill({mine: false, hidden: true}), ...Array(mines).fill({mine: true, hidden: true})]
     const shuffledArray = shuffleArray(array)
     if (shuffledArray[clickedSquare].mine) {
         let foundEmpty = shuffledArray.findIndex(i => !i.mine)

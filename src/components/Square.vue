@@ -1,26 +1,23 @@
 <template>
   <button
-    :class="[`nb-${nearby}`, {
-      mine: mine,
-      flag: mark === 'flag',
-      question: mark === 'question'
-    }]"
+    :class="hidden
+    ? [{flag: mark === 'flag', question: mark === 'question', close: !mark}]
+    : [`nb-${nearby}`, {mine: mine}]"
     @click="checkSquare(pos)"
     @click.prevent.right="checkMark(pos)"
-    @mousedown="$emit('smile-fear', true)"
-    @mouseup="$emit('smile-fear', false)"
+    @mousedown.left="$emit('smile-fear', true)"
+    @mouseup.left="$emit('smile-fear', false)"
   />
 </template>
 
 <script>
 export default {
   name: "Square",
-  data() {
-    return {
-      id: this.pos.y * 16 + this.pos.x
-    }
-  },
   props: {
+    hidden: {
+      type: Boolean,
+      default: true
+    },
     mine: {
       type: Boolean
     },
