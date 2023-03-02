@@ -11,7 +11,7 @@
           <div :class="`digit d-${minesRemaining[2]}`" />
         </div>
 
-        <button @click="restartGame" class="smile happy" :class="{fear: fear}" />
+        <button @click="restartGame" class="smile happy" :class="{fear: fear, won: won, lost: lost}" />
 
         <div style="display: flex">
           <div :class="`digit d-${timePassed[0]}`" />
@@ -24,6 +24,7 @@
                 :key="16*y+x"
                 :pos="{x,y}"
                 :mine="item.mine"
+                :detonate="item.detonate"
                 :nearby="item.nearby"
                 :mark="item.mark"
                 :hidden="item.hidden"
@@ -48,7 +49,7 @@ import Square from "@/components/Square";
 
 const FIELD_INIT = 'field_init'
 const FIELD_INGAME = 'field_ingame'
-// const FIELD_OVER = 'field_over'
+const FIELD_OVER = 'field_over'
 
 export default {
   name: 'App',
@@ -62,22 +63,12 @@ export default {
       mines: 40,
       timer: 0,
       flags: 0,
+      won: false,
+      lost: false,
       fear: false,
     }
   },
   methods: {
-    // checkFlag(x, y) {
-    //   if (this.fieldState === FIELD_INGAME) {
-    //     // eslint-disable-next-line no-prototype-builtins
-    //     if (this.field[y][x]['mark'] === 'flag') {
-    //       this.field[y][x]['mark'] = 'question'
-    //     } else if (this.field[y][x]['mark'] === 'question') {
-    //       this.field[y][x]['mark'] = false
-    //     } else {
-    //       this.field[y][x]['mark'] = 'flag'
-    //     }
-    //   }
-    // },
     startTimer() {
       this.timerFunction = setInterval(() => this.timer++, 1000)
     },
@@ -96,6 +87,8 @@ export default {
       this.timer = 0
       this.mines = 40
       this.flags = 0
+      this.won = false
+      this.lost = false
     },
     flagsUpdate(delta) {
       this.flags += delta
@@ -149,7 +142,10 @@ export default {
 
     revealSquare(pos) {
       let square = this.field[pos.y][pos.x]
+      if (square.mark) return
       square.hidden = false
+      if (square.mine) this.looseGame(pos)
+      if (this.getSafeSquaresRemaining() === 0) this.winGame()
       if (square.nearby > 0) return
       if (square.nearby === 0) {
         let neighbors = this.getNeighbors(pos)
@@ -164,6 +160,29 @@ export default {
 
     createGameField(clickPos) {
       this.field = generateField(16,16,40, clickPos)
+    },
+
+    looseGame(pos) {
+      this.field[pos.y][pos.x] = {...this.field[pos.y][pos.x], detonate: true}
+      this.fieldState = FIELD_OVER
+      this.lost = true
+      clearInterval(this.timerFunction)
+    },
+
+    winGame() {
+      let mineSquares = this.field.flat().filter(i => i.mine)
+      for (let mine of mineSquares) {
+        mine.mark = 'flag'
+      }
+      this.fieldState = FIELD_OVER
+      this.won = true
+      clearInterval(this.timerFunction)
+    },
+
+    getSafeSquaresRemaining() {
+      let amount = this.field.flat().filter(i => !i.mine && i.hidden).length
+      console.log(amount)
+      return amount
     }
   },
   computed: {
@@ -215,6 +234,14 @@ export default {
 
 .fear {
   background: url("./assets/sprite.png") -54px 60px;
+}
+
+.won {
+  background: url("./assets/sprite.png") -81px 60px;
+}
+
+.lost {
+  background: url("./assets/sprite.png") -108px 60px;
 }
 
 .d-0 {

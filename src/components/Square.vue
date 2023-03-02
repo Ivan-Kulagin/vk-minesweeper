@@ -2,10 +2,10 @@
   <button
     :class="hidden
     ? [{flag: mark === 'flag', question: mark === 'question', close: !mark}]
-    : [`nb-${nearby}`, {mine: mine}]"
+    : [`nb-${nearby}`, {'mine': mine, 'mine-a': detonate}]"
     @click="checkSquare(pos)"
     @click.prevent.right="checkMark(pos)"
-    @mousedown.left="$emit('smile-fear', true)"
+    @mousedown.left="hidden && ($emit('smile-fear', true))"
     @mouseup.left="$emit('smile-fear', false)"
   />
 </template>
@@ -19,6 +19,9 @@ export default {
       default: true
     },
     mine: {
+      type: Boolean
+    },
+    detonate: {
       type: Boolean
     },
     nearby: {
