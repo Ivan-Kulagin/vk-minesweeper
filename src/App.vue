@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-
-    <h1>Mines remaining: {{ minesRemaining }}</h1>
-    <div style="width: 256px" @mouseleave="fearOff">
+    <h1>Minesweeper</h1>
+    <div style="margin-bottom: 20px">
+      <input type="range" min="10" max="50" v-model="uiScale">
+    </div>
+    <div style="width: 256px; transform-origin: 0 0" @mouseleave="fearOff" :style="{transform: `scale(${uiScale / 10})`}">
       <div style="display: flex; justify-content: space-between">
         <div style="display: flex">
           <div :class="`digit d-${minesRemaining[0]}`" />
@@ -27,6 +28,7 @@
                 :detonate="item.detonate"
                 :nearby="item.nearby"
                 :mark="item.mark"
+                :marked-mine="item.markedMine"
                 :hidden="item.hidden"
                 class="box"
                 :class="{close: fieldState === 'field_init'}"
@@ -66,6 +68,7 @@ export default {
       won: false,
       lost: false,
       fear: false,
+      uiScale: 20
     }
   },
   methods: {
@@ -164,6 +167,10 @@ export default {
 
     looseGame(pos) {
       this.field[pos.y][pos.x] = {...this.field[pos.y][pos.x], detonate: true}
+      let flaggedMineSquares = this.field.flat().filter(i => i.mine && i.mark === 'flag')
+      for (let mine of flaggedMineSquares) {
+        mine.markedMine = true
+      }
       this.fieldState = FIELD_OVER
       this.lost = true
       clearInterval(this.timerFunction)
@@ -201,9 +208,8 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: auto;
 }
 
 .box {

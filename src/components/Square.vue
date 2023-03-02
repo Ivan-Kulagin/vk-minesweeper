@@ -1,11 +1,11 @@
 <template>
   <button
     :class="hidden
-    ? [{flag: mark === 'flag', question: mark === 'question', close: !mark}]
-    : [`nb-${nearby}`, {'mine': mine, 'mine-a': detonate}]"
+    ? [{flag: mark === 'flag', question: mark === 'question', close: !mark, 'mine-x': markedMine}]
+    : [typeof nearby !== 'undefined' && (`nb-${nearby}`), {'mine': mine, 'mine-a': detonate}]"
     @click="checkSquare(pos)"
     @click.prevent.right="checkMark(pos)"
-    @mousedown.left="hidden && ($emit('smile-fear', true))"
+    @mousedown.left="hidden && !mark && ($emit('smile-fear', true))"
     @mouseup.left="$emit('smile-fear', false)"
   />
 </template>
@@ -19,6 +19,9 @@ export default {
       default: true
     },
     mine: {
+      type: Boolean
+    },
+    markedMine: {
       type: Boolean
     },
     detonate: {
@@ -62,7 +65,7 @@ export default {
 }
 
 .mine-x {
-  background: url("../assets/sprite.png") 20px 33px;
+  background: url("../assets/sprite.png") 20px 33px !important;
 }
 
 .mine-a {
