@@ -1,24 +1,16 @@
-# minesweeper
+# Сапёр
 
-## Project setup
+## Установить пакеты
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Запустить проект
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+### Сбилдить проект
 ```
 yarn build
 ```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
