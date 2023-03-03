@@ -152,7 +152,7 @@ export default {
       if (square.nearby > 0) return
       if (square.nearby === 0) {
         let neighbors = this.getNeighbors(pos)
-        console.log(pos, neighbors)
+        // console.log(pos, neighbors)
         for (let neighbor of neighbors) {
           if (!neighbor?.pos) return
           if (neighbor?.mine) return
@@ -188,7 +188,7 @@ export default {
 
     getSafeSquaresRemaining() {
       let amount = this.field.flat().filter(i => !i.mine && i.hidden).length
-      console.log(amount)
+      // console.log(amount)
       return amount
     }
   },

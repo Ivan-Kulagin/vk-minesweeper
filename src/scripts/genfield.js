@@ -60,7 +60,7 @@ const generateField = (width, height, mines, clickPos) => {
     const nearbySquaresPos = getNearbySquares(clickPos, width)
     const filteredEmptyPosArray = emptySquaresPos.filter(i => !nearbySquaresPos.includes(i))
     const shuffledFilteredEmptyPosArray = shuffleArray(filteredEmptyPosArray)
-    console.log({emptySquaresPos, nearbySquaresPos, shuffledFilteredEmptyPosArray})
+    // console.log({emptySquaresPos, nearbySquaresPos, shuffledFilteredEmptyPosArray})
     let iter = 0
     for (let pos of nearbySquaresPos) {
         if (shuffledArray[pos].mine) {
