@@ -17,14 +17,6 @@ const chunkArray = (array, chunkSize) => {
     return newArray
 }
 
-// const identifyArray = (array, chunkSize) => {
-//     let newArray = []
-//     for (let i = 0; i < array.length; i++) {
-//         newArray.push({pos: {x: i % chunkSize, y: Math.floor(i/chunkSize)}, mine: array[i].mine})
-//     }
-//     return newArray
-// }
-
 const getNearbySquares = (clickPos, width) => {
     const clickedSquare = clickPos.y * width + clickPos.x
     let squares = [
@@ -33,7 +25,7 @@ const getNearbySquares = (clickPos, width) => {
         clickedSquare - width,          // north
     ]
 
-    if (clickedSquare % width !== 15) {
+    if (clickedSquare % width !== width-1) {
         squares.push(
             clickedSquare + 1,          // east
             clickedSquare + 1 + width,  // south-east
@@ -52,7 +44,6 @@ const getNearbySquares = (clickPos, width) => {
 }
 
 const generateField = (width, height, mines, clickPos) => {
-    // const clickedSquare = clickPos.y * width + clickPos.x
     const array = [...Array(width * height - mines).fill({mine: false, hidden: true}), ...Array(mines).fill({mine: true, hidden: true})]
     const shuffledArray = shuffleArray(array)
 
@@ -61,21 +52,16 @@ const generateField = (width, height, mines, clickPos) => {
     const filteredEmptyPosArray = emptySquaresPos.filter(i => !nearbySquaresPos.includes(i))
     const shuffledFilteredEmptyPosArray = shuffleArray(filteredEmptyPosArray)
     // console.log({emptySquaresPos, nearbySquaresPos, shuffledFilteredEmptyPosArray})
-    let iter = 0
-    for (let pos of nearbySquaresPos) {
+
+    for (let i = 0; i < nearbySquaresPos.length; i++) {
+        let pos = nearbySquaresPos[i]
         if (shuffledArray[pos].mine) {
-            let foundEmpty = shuffledFilteredEmptyPosArray[iter]
+            let foundEmpty = shuffledFilteredEmptyPosArray[i]
             shuffledArray[foundEmpty] = {...shuffledArray[foundEmpty], mine: true}
             shuffledArray[pos] = {...shuffledArray[pos], mine: false}
-            iter++
         }
     }
 
-    // if (shuffledArray[clickedSquare].mine) {
-    //     let foundEmpty = shuffledArray.findIndex(i => !i.mine)
-    //     shuffledArray[foundEmpty] = {...shuffledArray[foundEmpty], mine: true}
-    //     shuffledArray[clickedSquare] = {...shuffledArray[clickedSquare], mine: false}
-    // }
     const chunkedArray = chunkArray(shuffledArray, width)
     return calculateFieldCells(chunkedArray)
 }
