@@ -4,8 +4,8 @@
     <div style="margin-bottom: 20px">
       <input type="range" min="10" max="50" v-model="uiScale">
     </div>
-    <div style="width: 256px; transform-origin: 0 0" @mouseleave="fearOff" :style="{transform: `scale(${uiScale / 10})`}">
-      <div style="display: flex; justify-content: space-between">
+    <div @mouseleave="fearOff" :style="{transform: `scale(${uiScale / 10})`}" class="game_container">
+      <div class="score_container">
         <div style="display: flex">
           <div :class="`digit d-${minesRemaining[0]}`" />
           <div :class="`digit d-${minesRemaining[1]}`" />
@@ -68,7 +68,7 @@ export default {
       won: false,
       lost: false,
       fear: false,
-      uiScale: 20
+      uiScale: 17
     }
   },
   methods: {
@@ -210,6 +210,23 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin: auto;
+}
+
+.game_container {
+  float: left;
+  width: 256px;
+  transform-origin: 0 0;
+
+  background-color: #c0c0c0;
+  box-shadow: inset 0 0 1px 4px #808080;
+  padding: 0.33em 0.66em 0.66em 0.66em;
+}
+
+.score_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
 }
 
 .box {
